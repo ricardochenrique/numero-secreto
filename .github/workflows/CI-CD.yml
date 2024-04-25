@@ -20,7 +20,10 @@ jobs:
         steps:
         - uses: actions/checkout@v4
         - run: |
-            REGEX="^((build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\(.*\))?!?: .*))"
+            chmod +x commit-msg
+            bash setup.sh
+        - run: |
+            REGEX="^((Merge[ a-z-]* branch.*)|(Revert*)|((build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\(.*\))?!?: .*))"
             FILE=`cat $1` # File containing the commit message
             echo "Commit Message: ${FILE}"
             if ! [[ $FILE =~ $REGEX ]]; then
