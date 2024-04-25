@@ -48,6 +48,17 @@ jobs:
         - run: npm ci
         - run: npm run lint
 
+    teste:
+        runs-on: ubuntu-latest
+        name: Testes
+        needs: build
+        steps:
+        - uses: willcaul/jest-github-action@v4
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+           test-command: "npm test"
+    
     release:
        runs-on: ubuntu-latest
        name: Geração de Versão
