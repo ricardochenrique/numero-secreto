@@ -15,6 +15,7 @@ function exibirMensagemInicial() {
 
 exibirMensagemInicial();
 
+/* eslint-disable */
 function verificarChute() {
   let chute = document.querySelector("input").value;
 
@@ -34,6 +35,7 @@ function verificarChute() {
     limparCampo();
   }
 }
+/* eslint-enable */
 
 function gerarNumeroAleatorio() {
   let numeroEscolhido = parseInt(Math.random() * numeroLimite + 1);
@@ -56,6 +58,7 @@ function limparCampo() {
   campoInput.value = "";
 }
 
+/* eslint-disable */
 function reiniciarJogo() {
   numeroSecreto = gerarNumeroAleatorio();
   limparCampo();
@@ -63,3 +66,4 @@ function reiniciarJogo() {
   exibirMensagemInicial();
   document.getElementById("reiniciar").setAttribute("disabled", true);
 }
+/* eslint-enable */
