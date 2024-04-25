@@ -51,7 +51,7 @@ jobs:
        name: Geração de Versão
        needs: build 
        steps:
-       - uses: actions/cheackout@v4
+       - uses: actions/checkout@v4
        - name: git configuration
          run: |
            git config --local user.name "Gitactions"
