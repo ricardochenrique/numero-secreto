@@ -20,7 +20,7 @@ jobs:
         steps:
         - uses: actions/checkout@v4
         - run: |
-            chmod +x commit-msg
+            chmod +x commit-msg.sh
             bash setup.sh
         - run: |
             REGEX="^((Merge[ a-z-]* branch.*)|(Revert*)|((build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\(.*\))?!?: .*))"
