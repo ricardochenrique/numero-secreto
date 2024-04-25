@@ -51,7 +51,6 @@ jobs:
     teste:
         runs-on: ubuntu-latest
         name: Testes
-        needs: build
         steps:
         - uses: willcaul/jest-github-action@v4
           env:
