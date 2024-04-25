@@ -51,7 +51,7 @@ jobs:
     teste:
         runs-on: ubuntu-latest
         name: Testes
-        needs: preflight
+        needs: build
         steps:
         - uses: willcaul/jest-github-action@v4
           env:
@@ -62,7 +62,7 @@ jobs:
     release:
        runs-on: ubuntu-latest
        name: Geração de Versão
-       needs: build 
+       needs: teste 
        steps:
        - uses: actions/checkout@v4
        - name: git configuration
