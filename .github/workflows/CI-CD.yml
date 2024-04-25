@@ -1,18 +1,44 @@
 name: CI/CD_Pipeline
 
 on:
-    pull:
+   push:
         branches:
             - main
             - develop
-    pull_request:
+   pull_request:
         branches:
             - main
             - develop
-    pull_request_targed:
+   pull_request_target:
         branches:
             - main
             - develop
+jobs:
+    preflight:
+        runs-on: ubuntu-latest
+        name: Commit_Check
+        steps:
+        - uses: actions/checkout@v4
+        - run: |
+            REGEX="^((Merge[ a-z-]* branch.*)|(Revert*)|((build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\(.*\))?!?: .*))"
+            FILE=`cat $1` # File containing the commit message
+            echo "Commit Message: ${FILE}"
+            if ! [[ $FILE =~ $REGEX ]]; then
+                echo >&2 "ERROR: Commit aborted for not following the Conventional Commit standard.​"
+                exit 1
+            else
+                echo >&2 "Valid commit message."
+            fi
 
-            
-    
+    Build:
+        runs-on: ubuntu-latest
+        name: Nodejs_execution_lint
+        steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4
+          with:
+                node-version: 20
+                cache: 'npm'
+        - run: npm ci
+        - run: npm run lint
+        #- run: "Testes"
