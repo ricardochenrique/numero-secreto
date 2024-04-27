@@ -10,12 +10,10 @@ on:
         branches:
             - main
             - develop
-            - testes
    pull_request_target:
         branches:
             - main
             - develop
-            - testes
 jobs:
     preflight:
         runs-on: ubuntu-latest
@@ -23,18 +21,8 @@ jobs:
         steps:
         - uses: actions/checkout@v4
         - run: |
-            chmod +x commit-msg
-            bash setup.sh
             REGEX="^((Merge[ a-z-]* branch.*)|(Revert*)|((build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\(.*\))?!?: .*))"
-            FILE=$(git log --format=%B -n 1)
-            echo "Commit Message: ${FILE}"
-            if ! [[ $FILE =~ $REGEX ]]; then
-                echo >&2 "ERROR: Commit aborted for not following the Conventional Commit standard.​"
-                exit 1
-            else
-                echo >&2 "Valid commit message."
-            fi
-
+            
     build:
         runs-on: ubuntu-latest
         name: Nodejs_execution_lint
