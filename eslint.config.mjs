@@ -1,10 +1,19 @@
 import globals from "globals";
 import pluginJs from "@eslint/js";
 
+let browserGlobals = globals.browser;
+
+// Verificar se browserGlobals é um array antes de tentar usar o reduce
+if (Array.isArray(browserGlobals)) {
+    browserGlobals = browserGlobals.filter(global => global !== "AudioWorkletGlobalScope");
+} else {
+    // Se não for um array, criaremos um array vazio
+    browserGlobals = [];
+}
 
 export default [
   {
-    languageOptions: { globals: globals.browser },
+    languageOptions: { globals: browserGlobals.reduce((acc, cur) => ({ ...acc, [cur]: true }), {}) },
   },
   pluginJs.configs.recommended,
 ];
