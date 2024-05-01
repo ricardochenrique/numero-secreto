@@ -1,13 +1,16 @@
+const { JSDOM } = require('jsdom');
+
+// Configuração do JSDOM
+const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>');
+global.document = dom.window.document;
+global.window = dom.window;
+
+// Código a ser testado
 let listaDeNumerosSorteados = [];
 let numeroLimite = 100;
 let numeroSecreto = gerarNumeroAleatorio();
 let tentativas = 1;
 
-
-function exibirTextoNaTela(tag, text) {
-  let campo = document.querySelector(tag);
-  campo.innerHTML = text;
-}
 
 function exibirMensagemInicial() {
   exibirTextoNaTela("h1", "Jogo do número secreto");
@@ -54,7 +57,7 @@ function gerarNumeroAleatorio() {
 
 function limparCampo() {
   chute = document.querySelector("input");
-  chute.value = "";
+  chute.value = "5";
 }
 
 function reiniciarJogo() {
