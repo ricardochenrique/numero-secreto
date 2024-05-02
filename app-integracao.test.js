@@ -6,64 +6,67 @@ global.document = dom.window.document;
 global.window = dom.window;
 
 // Código a ser testado
-let listaDeNumerosSorteados = [];
-let numeroLimite = 100;
-let numeroSecreto = gerarNumeroAleatorio();
-let tentativas = 1;
+let jogo = {
+  listaDeNumerosSorteados: [],
+  numeroLimite: 100,
+  numeroSecreto: this.gerarNumeroAleatorio(),
+  tentativas: 1,
+  exibirMensagemInicial: function() {
+    this.exibirTextoNaTela("h1", "Jogo do número secreto");
+    this.exibirTextoNaTela("p", "Escolha um número entre 1 e 100");
+  },
+  verificarChute: function() {
+    let chute = document.querySelector("input").value;
 
-
-function exibirMensagemInicial() {
-  exibirTextoNaTela("h1", "Jogo do número secreto");
-  exibirTextoNaTela("p", "Escolha um número entre 1 e 100");
-}
-
-exibirMensagemInicial();
-
-function verificarChute() {
-  let chute = document.querySelector("input").value;
-
-  if (chute == numeroSecreto) {
-    exibirTextoNaTela("h1", "Acertou!");
-    let palavraTentativa = tentativas > 1 ? "tentativas" : "tentativa";
-    let mensagemTentativas = `Você descobriu o número secreto com ${tentativas} ${palavraTentativa}!`;
-    exibirTextoNaTela("p", mensagemTentativas);
-    document.getElementById("reiniciar").removeAttribute("disabled");
-  } else {
-    if (chute > numeroSecreto) {
-      exibirTextoNaTela("p", "O número secreto é menor");
+    if (chute == this.numeroSecreto) {
+      this.exibirTextoNaTela("h1", "Acertou!");
+      let palavraTentativa = this.tentativas > 1 ? "tentativas" : "tentativa";
+      let mensagemTentativas = `Você descobriu o número secreto com ${this.tentativas} ${palavraTentativa}!`;
+      this.exibirTextoNaTela("p", mensagemTentativas);
+      document.getElementById("reiniciar").removeAttribute("disabled");
     } else {
-      exibirTextoNaTela("p", "O número secreto é maior");
+      if (chute > this.numeroSecreto) {
+        this.exibirTextoNaTela("p", "O número secreto é menor");
+      } else {
+        this.exibirTextoNaTela("p", "O número secreto é maior");
+      }
+      this.tentativas++;
+      this.limparCampo();
     }
-    tentativas++;
-    limparCampo();
+  },
+  gerarNumeroAleatorio: function() {
+    let numeroEscolhido = parseInt(Math.random() * this.numeroLimite + 1);
+    let quantidadeDeElementosNaLista = this.listaDeNumerosSorteados.length;
+
+    if (quantidadeDeElementosNaLista == this.numeroLimite) {
+      this.listaDeNumerosSorteados = [];
+    }
+    if (this.listaDeNumerosSorteados.includes(numeroEscolhido)) {
+      return this.gerarNumeroAleatorio();
+    } else {
+      this.listaDeNumerosSorteados.push(numeroEscolhido);
+      console.log(this.listaDeNumerosSorteados);
+      return numeroEscolhido;
+    }
+  },
+  limparCampo: function() {
+    chute = document.querySelector("input");
+    chute.value = "5";
+  },
+  reiniciarJogo: function() {
+    this.numeroSecreto = this.gerarNumeroAleatorio();
+    this.limparCampo();
+    this.tentativas = 1;
+    this.exibirMensagemInicial();
+    document.getElementById("reiniciar").setAttribute("disabled", true);
+  },
+  exibirTextoNaTela: function(selector, texto) {
+    let elemento = document.querySelector(selector);
+    if (!elemento) {
+      throw new Error(`Seletor não encontrado: ${selector}`);
+    }
+    elemento.innerHTML = texto;
   }
 }
 
-function gerarNumeroAleatorio() {
-  let numeroEscolhido = parseInt(Math.random() * numeroLimite + 1);
-  let quantidadeDeElementosNaLista = listaDeNumerosSorteados.length;
-
-  if (quantidadeDeElementosNaLista == numeroLimite) {
-    listaDeNumerosSorteados = [];
-  }
-  if (listaDeNumerosSorteados.includes(numeroEscolhido)) {
-    return gerarNumeroAleatorio();
-  } else {
-    listaDeNumerosSorteados.push(numeroEscolhido);
-    console.log(listaDeNumerosSorteados);
-    return numeroEscolhido;
-  }
-}
-
-function limparCampo() {
-  chute = document.querySelector("input");
-  chute.value = "5";
-}
-
-function reiniciarJogo() {
-  numeroSecreto = gerarNumeroAleatorio();
-  limparCampo();
-  tentativas = 1;
-  exibirMensagemInicial();
-  document.getElementById("reiniciar").setAttribute("disabled", true);
-}
+jogo.exibirMensagemInicial();

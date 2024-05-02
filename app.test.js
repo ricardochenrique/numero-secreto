@@ -1,12 +1,5 @@
 const { JSDOM } = require('jsdom');
-const {
-    gerarNumeroAleatorio,
-    exibirTextoNaTela,
-    limparCampo,
-    verificarChute,
-    reiniciarJogo,
-    exibirMensagemInicial
-} = require('./app.js');
+const jogo = require('./app.js');
 
 describe('Testes para o jogo do número secreto', () => {
     let numeroSecreto;
@@ -21,13 +14,13 @@ describe('Testes para o jogo do número secreto', () => {
         global.window = dom.window;
 
         // Simula a função exibirTextoNaTela
-        global.exibirTextoNaTela = jest.fn();
+        jogo.exibirTextoNaTela = jest.fn();
 
         // Simula a função querySelector
         global.document.querySelector = jest.fn();
 
         // Antes de cada teste, geramos um novo número secreto
-        numeroSecreto = gerarNumeroAleatorio();
+        numeroSecreto = jogo.gerarNumeroAleatorio();
     });
 
     // Após cada teste, limpa o ambiente
@@ -35,7 +28,7 @@ describe('Testes para o jogo do número secreto', () => {
         // Remove as variáveis globais criadas para o DOM simulado
         delete global.document;
         delete global.window;
-        delete global.exibirTextoNaTela;
+        delete jogo.exibirTextoNaTela;
     });
 
     // Teste para a função gerarNumeroAleatorio
@@ -46,7 +39,7 @@ describe('Testes para o jogo do número secreto', () => {
         });
 
         it('Não deve retornar o mesmo número consecutivamente', () => {
-            const novoNumeroSecreto = gerarNumeroAleatorio();
+            const novoNumeroSecreto = jogo.gerarNumeroAleatorio();
             expect(novoNumeroSecreto).not.toEqual(numeroSecreto);
         });
     });
@@ -58,7 +51,7 @@ describe('Testes para o jogo do número secreto', () => {
             const elementoMock = document.createElement('div');
 
             // Chama a função exibirTextoNaTela com o elemento simulado e o texto
-            exibirTextoNaTela(elementoMock, 'Texto de teste');
+            jogo.exibirTextoNaTela(elementoMock, 'Texto de teste');
 
             // Verifica se o texto foi exibido corretamente no elemento
             expect(elementoMock.innerHTML).toBe('Texto de teste');
@@ -66,7 +59,7 @@ describe('Testes para o jogo do número secreto', () => {
 
         it('Deve retornar seletor não encontrado se o elemento não existir', () => {
             // Chama a função exibirTextoNaTela com um seletor que não corresponde a nenhum elemento
-            exibirTextoNaTela('#elementoInexistente', 'Texto de teste');
+            jogo.exibirTextoNaTela('#elementoInexistente', 'Texto de teste');
 
             // Verifica se o seletor não foi encontrado
             expect(console.error).toHaveBeenCalledWith('Seletor não encontrado: #elementoInexistente');
@@ -78,7 +71,7 @@ describe('Testes para o jogo do número secreto', () => {
         it('Deve limpar o campo de entrada', () => {
             // Simula um campo de entrada
             const input = { value: 'teste' };
-            limparCampo(input);
+            jogo.limparCampo(input);
             expect(input.value).toBe('');
         });
     });
@@ -89,31 +82,31 @@ describe('Testes para o jogo do número secreto', () => {
             const input = { value: numeroSecreto };
             const mockExibirTextoNaTela = jest.fn();
             global.document.querySelector = jest.fn().mockReturnValue(input);
-            global.exibirTextoNaTela = mockExibirTextoNaTela;
+            jogo.exibirTextoNaTela = mockExibirTextoNaTela;
 
-            verificarChute();
+            jogo.verificarChute();
 
             expect(mockExibirTextoNaTela).toHaveBeenCalledWith('h1', 'Acertou!');
         });
 
         it('Deve exibir mensagem de "número secreto é menor" quando o chute é maior', () => {
-          const input = { value: numeroSecreto + 1 };
-          const mockExibirTextoNaTela = jest.fn();
-          global.document.querySelector = jest.fn().mockReturnValue(input);
-          global.exibirTextoNaTela = mockExibirTextoNaTela;
-      
-          verificarChute();
-      
-          expect(mockExibirTextoNaTela).toHaveBeenCalledWith('h1', 'Número secreto é menor');
-      });
+            const input = { value: numeroSecreto + 1 };
+            const mockExibirTextoNaTela = jest.fn();
+            global.document.querySelector = jest.fn().mockReturnValue(input);
+            jogo.exibirTextoNaTela = mockExibirTextoNaTela;
+
+            jogo.verificarChute();
+
+            expect(mockExibirTextoNaTela).toHaveBeenCalledWith('h1', 'Número secreto é menor');
+        });
 
         it('Deve exibir mensagem de "número secreto é maior" quando o chute é menor', () => {
             const input = { value: numeroSecreto - 1 };
             const mockExibirTextoNaTela = jest.fn();
             global.document.querySelector = jest.fn().mockReturnValue(input);
-            global.exibirTextoNaTela = mockExibirTextoNaTela;
+            jogo.exibirTextoNaTela = mockExibirTextoNaTela;
 
-            verificarChute();
+            jogo.verificarChute();
 
             expect(mockExibirTextoNaTela).toHaveBeenCalledWith('p', 'O número secreto é maior');
         });
@@ -125,11 +118,11 @@ describe('Testes para o jogo do número secreto', () => {
             const mockGerarNumeroAleatorio = jest.fn().mockReturnValue(55);
             const mockLimparCampo = jest.fn();
             const mockExibirMensagemInicial = jest.fn();
-            global.gerarNumeroAleatorio = mockGerarNumeroAleatorio;
-            global.limparCampo = mockLimparCampo;
-            global.exibirMensagemInicial = mockExibirMensagemInicial;
+            jogo.gerarNumeroAleatorio = mockGerarNumeroAleatorio;
+            jogo.limparCampo = mockLimparCampo;
+            jogo.exibirMensagemInicial = mockExibirMensagemInicial;
 
-            reiniciarJogo();
+            jogo.reiniciarJogo();
 
             expect(mockGerarNumeroAleatorio).toHaveBeenCalled();
             expect(mockLimparCampo).toHaveBeenCalled();
@@ -141,9 +134,9 @@ describe('Testes para o jogo do número secreto', () => {
     describe('Testes para a função exibirMensagemInicial', () => {
         it('Deve exibir mensagem inicial corretamente', () => {
             const mockExibirTextoNaTela = jest.fn();
-            global.exibirTextoNaTela = mockExibirTextoNaTela;
+            jogo.exibirTextoNaTela = mockExibirTextoNaTela;
 
-            exibirMensagemInicial();
+            jogo.exibirMensagemInicial();
 
             expect(mockExibirTextoNaTela).toHaveBeenCalledWith('h1', 'Jogo do número secreto');
             expect(mockExibirTextoNaTela).toHaveBeenCalledWith('p', 'Escolha um número entre 1 e 100');
