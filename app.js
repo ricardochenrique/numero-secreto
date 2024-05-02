@@ -6,7 +6,11 @@ let tentativas = 1;
 
 function exibirTextoNaTela(tag, text) {
   let campo = document.querySelector(tag);
-  campo.innerHTML = text;
+  if (campo) {
+    campo.innerHTML = text;
+  } else {
+    console.error(`Elemento não encontrado: ${tag}`);
+  }
 }
 
 function exibirMensagemInicial() {

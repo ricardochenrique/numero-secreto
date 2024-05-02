@@ -1,7 +1,7 @@
 const { JSDOM } = require('jsdom');
 
 // Configuração do JSDOM
-const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>');
+const dom = new JSDOM('<!DOCTYPE html><html><body><input></body></html>');
 global.document = dom.window.document;
 global.window = dom.window;
 
@@ -50,8 +50,8 @@ let jogo = {
     }
   },
   limparCampo: function() {
-    chute = document.querySelector("input");
-    chute.value = "5";
+    let chute = document.querySelector("input");
+    chute.value = "";
   },
   reiniciarJogo: function() {
     this.numeroSecreto = this.gerarNumeroAleatorio();
@@ -63,9 +63,10 @@ let jogo = {
   exibirTextoNaTela: function(selector, texto) {
     let elemento = document.querySelector(selector);
     if (!elemento) {
-      throw new Error(`Seletor não encontrado: ${selector}`);
+      console.error(`Seletor não encontrado: ${selector}`);
+    } else {
+      elemento.innerHTML = texto;
     }
-    elemento.innerHTML = texto;
   }
 }
 

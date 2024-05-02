@@ -1,5 +1,5 @@
-import globals from "globals";
-import pluginJs from "@eslint/js";
+const globals = require("globals");
+const pluginJs = require("@eslint/js");
 
 let browserGlobals = globals.browser;
 
@@ -11,9 +11,9 @@ if (Array.isArray(browserGlobals)) {
     browserGlobals = [];
 }
 
-export default [
-  {
-    languageOptions: { globals: browserGlobals.reduce((acc, cur) => ({ ...acc, [cur]: true }), {}) },
-  },
-  pluginJs.configs.recommended,
+module.exports = [
+    {
+        languageOptions: { globals: browserGlobals.reduce((acc, cur) => ({ ...acc, [cur]: true }), {}) },
+    },
+    pluginJs.configs.recommended,
 ];
