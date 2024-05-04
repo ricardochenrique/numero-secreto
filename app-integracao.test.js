@@ -7,24 +7,28 @@ global.window = dom.window;
 
 // Código a ser testado
 let jogo = {
-  listaDeNumerosSorteados: [],
-  numeroLimite: 100,
-  numeroSecreto: this.gerarNumeroAleatorio(),
-  tentativas: 1,
+  listaDeNumerosSorteados: [], // Lista para armazenar números sorteados
+  numeroLimite: 100, // Limite de números para sortear
+  numeroSecreto: this.gerarNumeroAleatorio(), // Número secreto que o jogador deve adivinhar
+  tentativas: 1, // Contador de tentativas do jogador
   exibirMensagemInicial: function() {
+    // Exibe a mensagem inicial do jogo
     this.exibirTextoNaTela("h1", "Jogo do número secreto");
     this.exibirTextoNaTela("p", "Escolha um número entre 1 e 100");
   },
   verificarChute: function() {
+    // Verifica se o chute do jogador é igual ao número secreto
     let chute = document.querySelector("input").value;
 
     if (chute == this.numeroSecreto) {
+      // Se o jogador acertar o número secreto
       this.exibirTextoNaTela("h1", "Acertou!");
       let palavraTentativa = this.tentativas > 1 ? "tentativas" : "tentativa";
       let mensagemTentativas = `Você descobriu o número secreto com ${this.tentativas} ${palavraTentativa}!`;
       this.exibirTextoNaTela("p", mensagemTentativas);
       document.getElementById("reiniciar").removeAttribute("disabled");
     } else {
+      // Se o jogador errar o número secreto
       if (chute > this.numeroSecreto) {
         this.exibirTextoNaTela("p", "O número secreto é menor");
       } else {
@@ -35,6 +39,7 @@ let jogo = {
     }
   },
   gerarNumeroAleatorio: function() {
+    // Gera um número aleatório e verifica se ele já foi sorteado
     let numeroEscolhido = parseInt(Math.random() * this.numeroLimite + 1);
     let quantidadeDeElementosNaLista = this.listaDeNumerosSorteados.length;
 
@@ -50,10 +55,12 @@ let jogo = {
     }
   },
   limparCampo: function() {
+    // Limpa o campo de entrada
     let chute = document.querySelector("input");
     chute.value = "";
   },
   reiniciarJogo: function() {
+    // Reinicia o jogo
     this.numeroSecreto = this.gerarNumeroAleatorio();
     this.limparCampo();
     this.tentativas = 1;
@@ -61,6 +68,7 @@ let jogo = {
     document.getElementById("reiniciar").setAttribute("disabled", true);
   },
   exibirTextoNaTela: function(selector, texto) {
+    // Exibe um texto na tela
     let elemento = document.querySelector(selector);
     if (!elemento) {
       console.error(`Seletor não encontrado: ${selector}`);
@@ -70,4 +78,4 @@ let jogo = {
   }
 }
 
-jogo.exibirMensagemInicial();
+jogo.exibirMensagemInicial(); // Inicia o jogo

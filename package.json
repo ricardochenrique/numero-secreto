@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "jest",
+    "test:unit": "jest --runInBand --forceExit --detectOpenHandles --testPathPattern=unit",
+    "test:integration": "jest --runInBand --forceExit --detectOpenHandles --testPathPattern=integration",
     "lint": "eslint ."
   },
   "keywords": [],

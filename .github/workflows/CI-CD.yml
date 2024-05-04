@@ -2,25 +2,18 @@ name: CI/CD_Pipeline
 
 on:
   push:
-    branches:
-      - main
-      - develop
-      - testes
+    branches: [main, release, dev] # Branches que acionam o pipeline quando ocorre um push
   pull_request:
-    branches:
-      - main
-      - develop
-  pull_request_target:
-    branches:
-      - main
-      - develop
+    branches: [main, release, dev] # Branches que acionam o pipeline quando ocorre um pull request
+
 jobs:
-  commit_message_check:  # Verifica a mensagem do commit
+  preflight:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: |
-          REGEX="^((Merge[ a-z-]* branch.*)|(Revert*)|((build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\(.*\))?!?: .*))"
+          echo "Validating commit messages..."
+          REGEX="^((Merge.*)|(Revert.*)|((build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\(.*\))?!?: .*))"
           COMMIT_MSGS=$(git log --format=%B ${{ github.event.before }}..${{ github.event.after }})
           echo "$COMMIT_MSGS" | while read -r COMMIT_MSG; do
             if ! echo "$COMMIT_MSG" | grep -Eq "$REGEX"; then
@@ -29,43 +22,46 @@ jobs:
             fi
           done
 
-  nodejs_build_and_lint:  # Executa a construção e lint do Node.js
+  build:
     runs-on: ubuntu-latest
-    needs: commit_message_check
+    needs: preflight
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 14  # Use a versão LTS do Node.js
+          node-version: 14
       - name: Cache Node.js modules
         uses: actions/cache@v3
         with:
-          path: ~/.npm
+          path: node_modules
           key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.OS }}-node-
       - run: npm ci
       - run: npm run lint
 
-  run_tests:  # Executa os testes
+  test:
+    needs: build
     runs-on: ubuntu-latest
-    needs: nodejs_build_and_lint
-    steps:
-      - uses: willcaul/jest-github-action@v4
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          test-command: "npm test"
-
-  version_generation:  # Gera a versão
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14, 16]
+        test: [unit, integration]
     steps:
       - uses: actions/checkout@v4
-      - name: git configuration
-        run: |
-          git config --local user.name "Gitactions"
-          git config --local user.email "actions@github.com"
-      - name: Criação da Versão
-        run: |
-          npm version patch -m "Bump version to %s"
-          git push --follow-tags
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm run test:${{ matrix.test }}
+
+    versions:
+      if: github.ref == 'refs/heads/release' # Este trabalho é executado se a referência do GitHub for 'refs/heads/release'
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - name: Set up shell script permissions
+          run: chmod +x ./numero-secreto/generate_version.sh # Executa o comando para configurar as permissões do script shell
+        - name: Generate version
+          run: ./numero-secreto/generate_version.sh true # Executa o script para gerar a versão
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
