@@ -3,9 +3,14 @@ let numeroLimite = 100;
 let numeroSecreto = gerarNumeroAleatorio();
 let tentativas = 1;
 
-function exibirTextoNaTela(tag, texto) {
+
+function exibirTextoNaTela(tag, text) {
   let campo = document.querySelector(tag);
-  campo.innerHTML = texto;
+  if (campo) {
+    campo.innerHTML = text;
+  } else {
+    console.error(`Elemento não encontrado: ${tag}`);
+  }
 }
 
 function exibirMensagemInicial() {
@@ -15,7 +20,6 @@ function exibirMensagemInicial() {
 
 exibirMensagemInicial();
 
-/* eslint-disable */
 function verificarChute() {
   let chute = document.querySelector("input").value;
 
@@ -35,7 +39,6 @@ function verificarChute() {
     limparCampo();
   }
 }
-/* eslint-enable */
 
 function gerarNumeroAleatorio() {
   let numeroEscolhido = parseInt(Math.random() * numeroLimite + 1);
@@ -54,11 +57,10 @@ function gerarNumeroAleatorio() {
 }
 
 function limparCampo() {
-  let campoInput = document.querySelector("input");
-  campoInput.value = "";
+  chute = document.querySelector("input");
+  chute.value = "";
 }
 
-/* eslint-disable */
 function reiniciarJogo() {
   numeroSecreto = gerarNumeroAleatorio();
   limparCampo();
@@ -66,4 +68,3 @@ function reiniciarJogo() {
   exibirMensagemInicial();
   document.getElementById("reiniciar").setAttribute("disabled", true);
 }
-/* eslint-enable */

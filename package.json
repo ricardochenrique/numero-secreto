@@ -1,17 +1,19 @@
 {
-  "name": "numero-secreto",
+  "name": "git-course",
   "version": "1.0.0",
+  "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint":"eslint"
+    "test:unit": "jest --runInBand --forceExit --detectOpenHandles --testPathPattern=unit",
+    "test:integration": "jest --runInBand --forceExit --detectOpenHandles --testPathPattern=integration",
+    "lint": "eslint ."
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "devDependencies": {
-    "@eslint/js": "^9.1.1",
-    "eslint": "^9.1.0",
-    "globals": "^15.0.0"
+    "eslint": "^9.1.1",
+    "jest": "^29.7.0",
+    "jsdom": "^24.0.0"
   }
 }
