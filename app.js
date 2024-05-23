@@ -4,10 +4,17 @@ let numeroSecreto = gerarNumeroAleatorio();
 let tentativas = 1;
 
 function exibirTextoNaTela(tag, texto) {
+  console.log(`Tentando selecionar o elemento com o seletor: ${tag}`);
   let campo = document.querySelector(tag);
-  campo.innerHTML = texto;
-  responsiveVoice.speak(texto, "Brazilian Portuguese Female", { rate: 1.2 });
+  if (campo) {
+    console.log(`Elemento encontrado: ${campo.outerHTML}`);
+    campo.innerHTML = texto;
+    console.log(`Texto definido no elemento: ${campo.outerHTML}`);
+  } else {
+    console.error(`Seletor não encontrado: ${tag}`);
+  }
 }
+
 
 function exibirMensagemInicial() {
   exibirTextoNaTela("h1", "Jogo do número secreto");
@@ -53,8 +60,12 @@ function gerarNumeroAleatorio() {
 }
 
 function limparCampo() {
-  chute = document.querySelector("input");
-  chute.value = "";
+  let chute = document.querySelector("input");
+  if (chute) {  // Verifica se chute não é null
+      chute.value = "";
+  } else {
+      console.error('Elemento input não encontrado.');
+  }
 }
 
 function reiniciarJogo() {
@@ -63,4 +74,23 @@ function reiniciarJogo() {
   tentativas = 1;
   exibirMensagemInicial();
   document.getElementById("reiniciar").setAttribute("disabled", true);
+}
+
+module.exports = {
+  exibirTextoNaTela,
+  exibirMensagemInicial,
+  verificarChute,
+  gerarNumeroAleatorio,
+  limparCampo,
+  reiniciarJogo,
+  listaDeNumerosSorteados,
+  numeroLimite,
+  numeroSecreto,
+  tentativas
+};
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('load', () => {
+    exibirMensagemInicial();
+  });
 }
